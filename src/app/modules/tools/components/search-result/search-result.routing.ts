@@ -3,7 +3,7 @@ import { SearchResultComponent } from './search-result.component';
 
 const routes: Routes = [
   { 
-    path: '/items',
+    path: 'items',
     component: SearchResultComponent
    },
 ];

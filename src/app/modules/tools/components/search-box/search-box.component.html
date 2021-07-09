@@ -1,11 +1,11 @@
 <header>
   <div class="navbar">
     <div class="logo"></div>
-    <form action="">
+    <form action="" [formGroup]="formSearch">
       <div class="box-input">
-        <input class="inp-search" type="text" id="input-search" placeholder="Nunca dejes de buscar">
-        <button class="btn-search">
-          <img src="./../../../../../assets/ic_Search.png" alt="">
+        <input class="inp-search" type="text" id="input-search" formControlName="search" placeholder="Nunca dejes de buscar" autocomplete="off">
+        <button class="btn-search" (click)="passQueryParameter()">
+          <img src="./assets/ic_Search.png" alt="">
         </button>
       </div>
     </form>
