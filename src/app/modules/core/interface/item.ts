@@ -1,0 +1,11 @@
+import { PriceItem } from "./price-item";
+import { Shipping } from "./shipping";
+
+export interface Item {
+    id: string,
+    title: string,
+    price: PriceItem,
+    picture: string,
+    condition: string,
+    freeShipping: Shipping,
+}
