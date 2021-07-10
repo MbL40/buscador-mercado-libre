@@ -10,7 +10,7 @@ import { PriceItem } from 'src/app/modules/core/interface/price-item';
 import { GeneralResponse } from 'src/app/modules/core/interface/response';
 import { Shipping } from 'src/app/modules/core/interface/shipping';
 import { SearchItemService } from 'src/app/modules/core/services/search-items/search-item.service';
-import { SellerService } from 'src/app/modules/core/services/seller/Seller.service';
+import { SellerService } from 'src/app/modules/core/services/seller/seller.service';
 
 @Component({
   selector: 'app-search-result',
@@ -23,14 +23,14 @@ export class SearchResultComponent implements OnInit {
   infoItem: InfoItem = <InfoItem>{};
   author: InfoAuthor = <InfoAuthor>{};
   items: Item[] = new Array<Item>();
-  uniqueItem: Item = <Item>{};
-  priceItem: PriceItem = <PriceItem>{};
   shipping: Shipping = <Shipping>{};
   category: String[] = [];
 
+  listElement = new Array();
   responseSearchByName: any;
   responseSearchUserById: any;
   responseSearchCategoryById: any;
+
   constructor(
     private route: ActivatedRoute,
     private searchService: SearchItemService,
@@ -45,28 +45,36 @@ export class SearchResultComponent implements OnInit {
   private searchItemByName() {
     this.infoItem.items = [];
     let results: any
+    let prices: any;
     this.item$ = this.route.queryParamMap.pipe(
       map((params: ParamMap) => params.get('search'))
     );
     this.item$.subscribe(param => {
       this.searchService.searchItemsByName(param).subscribe(valObservable => {
         this.responseSearchByName = valObservable;
-        results = this.responseSearchByName.results.find((m: any) => m); //Devuelvo arreglo de results.
-        this.searchUserById(results.seller.id);
-        this.searchCategoryById(results.category_id);
-        results.prices.prices.forEach((element: any) => {
-          this.priceItem.amount = element.amount;
-          this.priceItem.currency = element.currency_id;
+        results = this.responseSearchByName.results;
+        results.forEach((element: any) => {
+          this.listElement.push(element) // Lista de objetos que devuelve la api ?search=apple
         });
-        setTimeout(() => {
-          this.uniqueItem.id = results.id;
-          this.uniqueItem.title = results.title;
-          this.uniqueItem.price = this.priceItem;
-          this.uniqueItem.picture = this.responseSearchCategoryById.picture;
-          this.uniqueItem.condition = results.condition;
-          this.uniqueItem.freeShipping = results.shipping.free_shipping;
-          this.infoItem.items.push(this.uniqueItem);
-        }, 1000);
+        for (let i = 0; i < this.listElement.length; i++) {
+          let uniqueItem: Item = <Item>{};
+          let priceItem: PriceItem = <PriceItem>{};
+          const element = this.listElement[i];
+          console.log(element.prices.prices)
+          this.searchUserById(element.seller.id);
+          this.searchCategoryById(element.category_id);
+          setTimeout(() => { //Debería cambiarse por validación de status de los servicios que se consumen anteriormente
+            priceItem.amount = element.price;
+            priceItem.currency = element.currency_id;
+            uniqueItem.id = element.id;
+            uniqueItem.title = element.title;
+            uniqueItem.price = priceItem;
+            uniqueItem.condition = element.condition;
+            uniqueItem.free_shipping = element.shipping.free_shipping;
+            uniqueItem.picture = this.responseSearchCategoryById.picture
+            this.infoItem.items.push(uniqueItem);
+          }, 1000);
+        }
         console.log(this.infoItem.items)
       })
     });
@@ -88,9 +96,10 @@ export class SearchResultComponent implements OnInit {
     this.sellerService.getCategoryById(id).subscribe(
       res => {
         this.responseSearchCategoryById = res;
-        console.log(this.responseSearchCategoryById.picture)
+        console.log(this.responseSearchCategoryById)
         this.category.push(this.responseSearchCategoryById.name)
         this.infoItem.categories = this.category
+
       }
     )
   }
