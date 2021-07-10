@@ -1,9 +1,12 @@
 <header>
   <div class="navbar">
-    <div class="logo"></div>
     <form action="" [formGroup]="formSearch">
+      <div class="logo">
+        <a href="https://www.mercadolibre.com.co/"></a>
+      </div>
       <div class="box-input">
-        <input class="inp-search" type="text" id="input-search" formControlName="search" placeholder="Nunca dejes de buscar" autocomplete="off">
+        <input class="inp-search" type="text" id="input-search" formControlName="search"
+          placeholder="Nunca dejes de buscar" autocomplete="off">
         <button class="btn-search" (click)="passQueryParameter()">
           <img src="./assets/ic_Search.png" alt="">
         </button>
