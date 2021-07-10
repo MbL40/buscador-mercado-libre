@@ -17,6 +17,6 @@ export class SellerService {
   }
 
   public getCategoryById(value: number): Observable<any> {
-    return this.http.get(this.endPointGetCategoryById + value, {observe: 'response'});
+    return this.http.get(this.endPointGetCategoryById + value);
   }
 }
