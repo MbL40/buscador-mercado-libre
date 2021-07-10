@@ -7,5 +7,5 @@ export interface Item {
     price: PriceItem,
     picture: string,
     condition: string,
-    freeShipping: Shipping,
+    free_shipping: Shipping,
 }
