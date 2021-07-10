@@ -1,5 +1,5 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, DEFAULT_CURRENCY_CODE, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -15,7 +15,8 @@ import { SellerService } from 'src/app/modules/core/services/seller/seller.servi
 @Component({
   selector: 'app-search-result',
   templateUrl: './search-result.component.html',
-  styleUrls: ['./search-result.component.scss']
+  styleUrls: ['./search-result.component.scss'],
+  providers: [{provide: DEFAULT_CURRENCY_CODE, useValue: 'COP'}]
 })
 
 export class SearchResultComponent implements OnInit {
@@ -25,7 +26,7 @@ export class SearchResultComponent implements OnInit {
   items: Item[] = new Array<Item>();
   shipping: Shipping = <Shipping>{};
   category: String[] = [];
-
+  flagPaintItems: number = 4;
   listElement = new Array();
   responseSearchByName: any;
   responseSearchUserById: any;
@@ -60,7 +61,7 @@ export class SearchResultComponent implements OnInit {
           let uniqueItem: Item = <Item>{};
           let priceItem: PriceItem = <PriceItem>{};
           const element = this.listElement[i];
-          console.log(element.prices.prices)
+          console.log(element.permalink)
           this.searchUserById(element.seller.id);
           this.searchCategoryById(element.category_id);
           setTimeout(() => { //Debería cambiarse por validación de status de los servicios que se consumen anteriormente
@@ -71,11 +72,10 @@ export class SearchResultComponent implements OnInit {
             uniqueItem.price = priceItem;
             uniqueItem.condition = element.condition;
             uniqueItem.free_shipping = element.shipping.free_shipping;
-            uniqueItem.picture = this.responseSearchCategoryById.picture
+            uniqueItem.picture = element.thumbnail;
             this.infoItem.items.push(uniqueItem);
-          }, 1000);
+          }, 500);
         }
-        console.log(this.infoItem.items)
       })
     });
   }
@@ -96,10 +96,8 @@ export class SearchResultComponent implements OnInit {
     this.sellerService.getCategoryById(id).subscribe(
       res => {
         this.responseSearchCategoryById = res;
-        console.log(this.responseSearchCategoryById)
         this.category.push(this.responseSearchCategoryById.name)
         this.infoItem.categories = this.category
-
       }
     )
   }
