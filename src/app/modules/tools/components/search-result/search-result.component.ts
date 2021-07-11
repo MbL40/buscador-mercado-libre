@@ -9,6 +9,7 @@ import { Item } from 'src/app/modules/core/interface/item';
 import { PriceItem } from 'src/app/modules/core/interface/price-item';
 import { GeneralResponse } from 'src/app/modules/core/interface/response';
 import { Shipping } from 'src/app/modules/core/interface/shipping';
+import { DataService } from 'src/app/modules/core/services/data/data.service';
 import { SearchItemService } from 'src/app/modules/core/services/search-items/search-item.service';
 import { SellerService } from 'src/app/modules/core/services/seller/seller.service';
 
@@ -16,7 +17,7 @@ import { SellerService } from 'src/app/modules/core/services/seller/seller.servi
   selector: 'app-search-result',
   templateUrl: './search-result.component.html',
   styleUrls: ['./search-result.component.scss'],
-  providers: [{provide: DEFAULT_CURRENCY_CODE, useValue: 'COP'}]
+  providers: [{ provide: DEFAULT_CURRENCY_CODE, useValue: 'COP' }]
 })
 
 export class SearchResultComponent implements OnInit {
@@ -28,6 +29,7 @@ export class SearchResultComponent implements OnInit {
   category: String[] = [];
   flagPaintItems: number = 4;
   listElement = new Array();
+  dataRoute = [];
   responseSearchByName: any;
   responseSearchUserById: any;
   responseSearchCategoryById: any;
@@ -36,6 +38,7 @@ export class SearchResultComponent implements OnInit {
     private route: ActivatedRoute,
     private searchService: SearchItemService,
     private sellerService: SellerService,
+    private dataService: DataService
   ) { }
 
 
@@ -46,7 +49,6 @@ export class SearchResultComponent implements OnInit {
   private searchItemByName() {
     this.infoItem.items = [];
     let results: any
-    let prices: any;
     this.item$ = this.route.queryParamMap.pipe(
       map((params: ParamMap) => params.get('search'))
     );
@@ -57,27 +59,39 @@ export class SearchResultComponent implements OnInit {
         results.forEach((element: any) => {
           this.listElement.push(element) // Lista de objetos que devuelve la api ?search=apple
         });
-        for (let i = 0; i < this.listElement.length; i++) {
-          let uniqueItem: Item = <Item>{};
-          let priceItem: PriceItem = <PriceItem>{};
-          const element = this.listElement[i];
-          console.log(element.permalink)
-          this.searchUserById(element.seller.id);
-          this.searchCategoryById(element.category_id);
-          setTimeout(() => { //Debería cambiarse por validación de status de los servicios que se consumen anteriormente
-            priceItem.amount = element.price;
-            priceItem.currency = element.currency_id;
-            uniqueItem.id = element.id;
-            uniqueItem.title = element.title;
-            uniqueItem.price = priceItem;
-            uniqueItem.condition = element.condition;
-            uniqueItem.free_shipping = element.shipping.free_shipping;
-            uniqueItem.picture = element.thumbnail;
-            this.infoItem.items.push(uniqueItem);
-          }, 500);
-        }
+        this.paintItem(this.listElement);
       })
     });
+  }
+
+  private paintItem(list: any[]) {
+    let count: number = 0;
+    for (let i = 0; i < list.length; i++) {
+      count++;
+      let uniqueItem: Item = <Item>{};
+      let priceItem: PriceItem = <PriceItem>{};
+      const element = list[i];
+      if (count <= 4) {
+        this.searchUserById(element.seller.id);
+        this.searchCategoryById(element.category_id);
+        priceItem.amount = element.price;
+        priceItem.currency = element.currency_id;
+        uniqueItem.id = element.id;
+        uniqueItem.title = element.title;
+        uniqueItem.price = priceItem;
+        uniqueItem.condition = element.condition;
+        uniqueItem.free_shipping = element.shipping.free_shipping;
+        uniqueItem.picture = element.thumbnail;
+        this.infoItem.items.push(uniqueItem);
+      }
+    }
+  } 
+
+  public selectItemSpecific(item: Item){
+    this.dataService.item.picture = item.picture;
+    this.dataService.item.title = item.title;
+    this.dataService.item.price = item.price;
+    this.dataService.item.condition = item.condition
   }
 
   private searchUserById(id: number) {
@@ -91,9 +105,8 @@ export class SearchResultComponent implements OnInit {
     )
   }
 
-  //Nombre de categoría(name), url de imagen (picture)
   private searchCategoryById(id: number) {
-    this.sellerService.getCategoryById(id).subscribe(
+    this.searchService.getCategoryById(id).subscribe(
       res => {
         this.responseSearchCategoryById = res;
         this.category.push(this.responseSearchCategoryById.name)

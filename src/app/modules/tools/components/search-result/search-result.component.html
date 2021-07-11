@@ -1,7 +1,7 @@
 <app-search-box></app-search-box>
 <section class="container">
     <ol class="box-product" *ngFor="let product of infoItem.items; let i = index">
-        <li *ngIf="i <= 3" [type]="product">
+        <li *ngIf="i <= 3" [type]="product" id="{{product.id}}" [routerLink]="['/items', product.id]" routerLinkActive="router-link-active" (click)="selectItemSpecific(product)">
             <div class="img">
                 <img src="{{product.picture}}" alt="{{product.title}}">
             </div>

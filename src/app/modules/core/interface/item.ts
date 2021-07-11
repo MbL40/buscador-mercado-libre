@@ -8,4 +8,6 @@ export interface Item {
     picture: string,
     condition: string,
     free_shipping: Shipping,
+    sold_quantity: number,
+    description: string,
 }

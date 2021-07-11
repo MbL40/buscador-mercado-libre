@@ -3,8 +3,8 @@ import { DetailProductComponent } from './detail-product.component';
 
 const routes: Routes = [
   {
-    path: 'items/:id',
-    component: DetailProductComponent
+    path: '',
+    component: DetailProductComponent,
   },
 ];
 

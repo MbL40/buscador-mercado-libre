@@ -1,0 +1,73 @@
+$marginGreen: 32px;
+$marginRed: 16px;
+$bgButton: #3483fa;
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 1100px;
+    margin: auto;
+    background-color: #fff;
+    padding: 0 0 0 8px;
+    margin-top: 20px;
+    border-radius: 6px;
+}
+.left {
+    padding-left: 30px;
+    .img {
+        img {
+            width: 680px;
+            height: 680px;
+        }
+    }
+    .description {
+        margin-top: 50px;
+        h2 {
+            margin-bottom: 32px;
+            font-family: "Montserrat";
+        }
+        p {
+            color: #999;
+            line-height: 16px;
+            text-align: justify;
+            line-height: 24px;
+            font-family: "Arial";
+        }
+    }
+}
+.right {
+    padding-right: 36px;
+    .sold-quantity {
+        margin-top: $marginGreen;
+        margin-bottom: $marginRed;
+        font-size: 14px;
+        font-family: "Montserrat";
+        color: #999;
+    }
+    .title {
+        font-size: 24px;
+        line-height: 32px;
+        color: #333;
+        margin-bottom: $marginGreen;
+        text-align: left;
+        font-family: "Montserrat";
+        font-weight: 600;
+    }
+    .price {
+        font-size: 46px;
+        font-family: "Montserrat";
+        color: #333;
+        margin-bottom: $marginGreen;
+    }
+    .buy-botton {
+        button {
+            background-color: $bgButton;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            cursor: pointer;
+            height: 40px;
+            width: 100%;
+            font-size: 18px;
+        }
+    }
+}

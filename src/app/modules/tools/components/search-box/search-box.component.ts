@@ -20,7 +20,7 @@ export class SearchBoxComponent implements OnInit {
   }
 
   public passQueryParameter() {
-    this.router.navigate(['/items'], { queryParams: { search: this.search?.value } });
+    this.router.navigate(['/']).then(() => { this.router.navigate(['/items'], { queryParams: { search: this.search?.value } }); })
   }
 
   private buildForm() {
