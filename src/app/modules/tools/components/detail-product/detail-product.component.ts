@@ -33,16 +33,15 @@ export class DetailProductComponent implements OnInit {
     let rsp: any;
     this.item$ = this.route.paramMap.pipe(
       map((params: ParamMap) => params.get('id'))
-      );
-      this.item$.subscribe(param => {
-        this.searchService.getItemSpecific(param).subscribe(valItem => {
-          this.item.sold_quantity = valItem.sold_quantity;
-          this.searchService.searchDescriptionItemById(param).subscribe(valResponse => {
-            rsp = valResponse;
-            this.item.description = rsp.plain_text
-          })
-        });
-        console.log(this.item);
+    );
+    this.item$.subscribe(param => {
+      this.searchService.getItemSpecific(param).subscribe(valItem => {
+        this.item.sold_quantity = valItem.sold_quantity;
+        this.searchService.searchDescriptionItemById(param).subscribe(valResponse => {
+          rsp = valResponse;
+          this.item.description = rsp.plain_text
+        })
+      });
     });
   }
 
