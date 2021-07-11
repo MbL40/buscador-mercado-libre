@@ -1,0 +1,28 @@
+<app-search-box></app-search-box>
+<section class="container">
+  <aside class="left">
+    <div class="img">
+      <img src="{{item.picture}}" alt="{{item.title}}">
+    </div>
+    <div class="description">
+      <h2>Descripción del producto</h2>
+      <p>{{item.description}}</p>
+    </div>
+  </aside>
+  <aside class="right">
+    <div class="sold-quantity">
+      {{item.condition == "new" ? 'Nuevo' : ''}} - {{item.sold_quantity}} vendidos
+    </div>
+    <div class="title">
+      {{item.title}}
+    </div>
+    <div class="price">
+      {{item.price.amount | currency :'$' : 'symbol' : '1.0-0'}}
+    </div>
+    <div class="buy-botton">
+      <button>Comprar</button>
+    </div>
+  </aside>
+
+
+</section>

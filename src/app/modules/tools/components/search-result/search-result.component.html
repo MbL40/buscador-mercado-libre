@@ -1,0 +1,22 @@
+<app-search-box></app-search-box>
+<section class="container">
+    <ol class="box-product" *ngFor="let product of infoItem.items; let i = index">
+        <li *ngIf="i <= 3" [type]="product" id="{{product.id}}" [routerLink]="['/items', product.id]" routerLinkActive="router-link-active" (click)="selectItemSpecific(product)">
+            <div class="img">
+                <img src="{{product.picture}}" alt="{{product.title}}">
+            </div>
+            <div class="container-text">
+                <div class="price">
+                    {{product.price.amount | currency :'$' : 'symbol' : '1.0-0' }} <span *ngIf="product.free_shipping"><img src="./assets/ic_shipping.png" alt=""></span>
+                </div>
+                <div class="title">
+                    {{product.title}}
+                </div>
+            </div>
+            <div class="city">
+                {{product.address.city_name}}
+            </div>
+        </li>
+
+    </ol>
+</section>
