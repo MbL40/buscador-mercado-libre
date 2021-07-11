@@ -3,11 +3,11 @@ import { Component, DEFAULT_CURRENCY_CODE, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AddressItem } from 'src/app/modules/core/interface/address-item';
 import { InfoAuthor } from 'src/app/modules/core/interface/info-author';
 import { InfoItem } from 'src/app/modules/core/interface/info-item';
 import { Item } from 'src/app/modules/core/interface/item';
 import { PriceItem } from 'src/app/modules/core/interface/price-item';
-import { GeneralResponse } from 'src/app/modules/core/interface/response';
 import { Shipping } from 'src/app/modules/core/interface/shipping';
 import { DataService } from 'src/app/modules/core/services/data/data.service';
 import { SearchItemService } from 'src/app/modules/core/services/search-items/search-item.service';
@@ -57,7 +57,7 @@ export class SearchResultComponent implements OnInit {
         this.responseSearchByName = valObservable;
         results = this.responseSearchByName.results;
         results.forEach((element: any) => {
-          this.listElement.push(element) // Lista de objetos que devuelve la api ?search=apple
+          this.listElement.push(element) 
         });
         this.paintItem(this.listElement);
       })
@@ -70,18 +70,21 @@ export class SearchResultComponent implements OnInit {
       count++;
       let uniqueItem: Item = <Item>{};
       let priceItem: PriceItem = <PriceItem>{};
+      let address: AddressItem = <AddressItem>{}
       const element = list[i];
       if (count <= 4) {
         this.searchUserById(element.seller.id);
         this.searchCategoryById(element.category_id);
         priceItem.amount = element.price;
         priceItem.currency = element.currency_id;
+        address.city_name = element.address.city_name
         uniqueItem.id = element.id;
         uniqueItem.title = element.title;
         uniqueItem.price = priceItem;
         uniqueItem.condition = element.condition;
         uniqueItem.free_shipping = element.shipping.free_shipping;
         uniqueItem.picture = element.thumbnail;
+        uniqueItem.address = address;
         this.infoItem.items.push(uniqueItem);
       }
     }
